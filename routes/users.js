@@ -2,7 +2,8 @@ var express = require('express'),
     _ = require('lodash'),
     config = require('../config'),
     jwt = require('jsonwebtoken'),
-    db = require('../db');
+    db = require('../db'),
+    datetime = require('node-datetime');
 
 var app = module.exports = express.Router();
 
@@ -55,6 +56,7 @@ app.post('/user/create', function (req, res) {
     var id = req.body.id;
     var pw = req.body.password;
     var nickname = req.body.nickname;
+    var date = datetime.create().format('Y-m-d H:M:S');
 
     if (!id || !pw || !nickname) {
         return res.status(400).send("You must send the username, password and nickname");
@@ -68,6 +70,7 @@ app.post('/user/create', function (req, res) {
                 id: id,
                 pw: pw,
                 nickname: nickname,
+                date: date
             };
 
             db.get().query('insert into users set ? ', [user], function (err, result) {
@@ -140,5 +143,4 @@ app.get('/user/check/:id', function (req, res) {
             res.status(400).send("A user with that id already exists");
         }
     });
-
 });

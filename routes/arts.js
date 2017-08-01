@@ -24,7 +24,7 @@ router.use('/private', jwtCheck);
  * Add a new art into arts table
  * 
  */
-router.post('/private/add', function(req, res) {
+router.post('/private/newart', function(req, res) {
     // accept json format
     req.accepts('application/json');
 
@@ -140,7 +140,7 @@ var upload = function(req, res) {
  */
 router.get('/image/:id', function(req, res) {
     var artPK = req.params.id;
-    fs.readFile(imagePath + '/' + reviewId + '.jpeg', function(err, data) {
+    fs.readFile(imagePath + '/' + artPK + '.jpeg', function(err, data) {
         if (err) {
             console.log(err); // fail
             res.status(500).send('fail to load image');
@@ -152,6 +152,53 @@ router.get('/image/:id', function(req, res) {
         }
     });
 });
+
+/**
+ * 
+ * Post a user's a like art
+ */
+router.post('/private/like-art', function(req, res) {
+    req.accepts('application/json');
+    
+    var userPK = req.body.user_pk;
+    var artPK = req.body.art_pk;
+    var date = datetime.create().format('Y-m-d H:M:S');
+
+    if(!userPK || !artPK) {
+        res.status(400).send('you must send the user_pk and art_pk');
+        return;
+    }
+
+    db.get().query('insert into user_like_art set ?', {
+        user_pk: userPK,
+        art_pk: artPK,
+        date: date
+    }, function(err, result) {
+        if(err) {
+            throw err;
+        } else {
+            res.status(201).send('Succcessfully added a like art');
+        }
+    });
+});
+
+
+/**
+ * 
+ * Get a user's like arts
+ */
+router.get('/private/like-art/:userid', function(req, res) {
+    var userPK = req.params.userid;
+
+    db.get().query('select * from user_like_art where user_pk = ?', userPK, function(err, result) {
+        if(err) {
+            throw err;
+        } else {
+            res.status(201).send('Suceess: Get a user\'s like arts');
+        }
+    });
+});
+
 
 module.exports = router;
 
