@@ -21,7 +21,7 @@ function createToken(userId) {
     Get user information in database matching with user email.
 */
 function getUserDB(userId, done) {
-    db.get().query('select * from users where id = ? LIMIT 1', [userId], function(err, rows, fields) {
+    db.get().query('select * from users where id = ? LIMIT 1', [userId], function (err, rows, fields) {
         if (err) {
             throw err;
         }
@@ -48,7 +48,7 @@ function createHashCode(input) {
     If the user email is valid, the user can open that url
          and the server update email_checkd value to 1.
 */
-app.post('/user/create', function(req, res) {
+app.post('/user/create', function (req, res) {
     req.accepts('application/json');
 
 
@@ -61,7 +61,7 @@ app.post('/user/create', function(req, res) {
     }
 
     // Check if there is a same email address.
-    getUserDB(id, function(user) {
+    getUserDB(id, function (user) {
         // There is no same email address.
         if (!user) {
             user = {
@@ -70,13 +70,13 @@ app.post('/user/create', function(req, res) {
                 nickname: nickname,
             };
 
-            db.get().query('insert into users set ? ', [user], function(err, result) {
+            db.get().query('insert into users set ? ', [user], function (err, result) {
                 if (err) {
                     throw err;
                 } else {
-                  res.status(201).send('Successfully created a user');
+                    res.status(201).send('Successfully created a user');
                 }
-              
+
 
             });
         } else {
@@ -94,7 +94,7 @@ app.post('/user/create', function(req, res) {
         except only the user.
         We just compare this encryted value with the stored encryted value.
 */
-app.post('/user/login', function(req, res) {
+app.post('/user/login', function (req, res) {
     req.accepts('application/json');
     console.log('requset: user login');
 
@@ -106,7 +106,7 @@ app.post('/user/login', function(req, res) {
         return res.status(400).send("You must send the id and password.");
     }
 
-    getUserDB(id, function(user) {
+    getUserDB(id, function (user) {
         if (!user) {
             return res.status(401).send("The id is not existing");
         }
@@ -124,14 +124,14 @@ app.post('/user/login', function(req, res) {
 /**
  * Check if there is a same id
  */
-app.get('/user/check/:id', function(req, res) {
-  var id = req.params.id;
+app.get('/user/check/:id', function (req, res) {
+    var id = req.params.id;
 
     if (!id) {
         return res.status(400).send("You must send a id");
     }
 
-    getUserDB(id, function(user) {
+    getUserDB(id, function (user) {
         if (!user) {
             res.status(201).send({
                 id: "OK"

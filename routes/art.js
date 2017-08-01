@@ -86,10 +86,6 @@ router.get('/private/get/:userPK', function(req, res) {
 
 
 var imagePath = __dirname + '/upload';
-
-
-
-
 /**
  * Upload a image
  */
@@ -156,6 +152,8 @@ router.get('/image/:id', function(req, res) {
         }
     });
 });
+
+module.exports = router;
 
 
 /*
