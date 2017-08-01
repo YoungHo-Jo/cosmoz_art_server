@@ -21,7 +21,7 @@ function createToken(userId) {
     Get user information in database matching with user email.
 */
 function getUserDB(userId, done) {
-    db.get().query('select * from users where user_id = ? LIMIT 1', [userId], function(err, rows, fields) {
+    db.get().query('select * from users where id = ? LIMIT 1', [userId], function(err, rows, fields) {
         if (err) {
             throw err;
         }
@@ -74,7 +74,7 @@ app.post('/user/create', function(req, res) {
                 if (err) {
                     throw err;
                 } else {
-                  res.status(201).send('Successfully created a user')
+                  res.status(201).send('Successfully created a user');
                 }
               
 
