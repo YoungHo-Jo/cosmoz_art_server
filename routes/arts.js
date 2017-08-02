@@ -197,7 +197,7 @@ router.delete('/private/dislike-art', function(req, res) {
         return;
     }
 
-    db.get().query('delete user_like_art where user_pk = ? and art_pk = ?', [userPK, artPK], function(err, result) {
+    db.get().query('delete from user_like_art where user_pk = ? and art_pk = ?', [userPK, artPK], function(err, result) {
         if(err) {
             throw err;
         } else {
