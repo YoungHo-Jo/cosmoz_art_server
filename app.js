@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-var art = require('./routes/art');
+var art = require('./routes/arts');
 var missions = require('./routes/missions');
 
 var app = express();
