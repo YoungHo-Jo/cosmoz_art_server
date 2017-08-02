@@ -184,6 +184,30 @@ router.post('/private/like-art', function(req, res) {
 
 
 /**
+ * Delete a user's a like art
+ */
+router.delete('/private/dislike-art', function(req, res) {
+    req.accepts('application/json');
+
+    var userPK = req.body.user_pk;
+    var artPK = req.body.art_pk;
+
+    if (!userPK || !artPK) {
+        res.status(400).send('You must send the user_pk and art_pk');
+        return;
+    }
+
+    db.get().query('delete user_like_art where user_pk = ? and art_pk = ?', [userPK, artPK], function(err, result) {
+        if(err) {
+            throw err;
+        } else {
+            res.status(201).send('Success: delete/private/dislike-art');
+        }
+    });
+        
+});
+
+/**
  * 
  * Get a user's like arts
  */
@@ -198,6 +222,32 @@ router.get('/private/like-art/:userid', function(req, res) {
         }
     });
 });
+
+
+/**
+ * Get arts regarding to mission
+ */
+router.get('/mission/:mission_pk', function(req, res) {
+    var missionPK = req.params.mission_pk;
+
+    if(!missionPK) {
+        res.status(401).send('You must send the mission_pk');
+        return;
+    }
+
+    db.get().query('select * from arts where mission_pk = ?', missionPK, function(err, result) {
+        if (err) {
+            throw err;
+        } else {
+            res.status(201).json(result);
+        }
+    });
+});
+
+
+
+
+
 
 
 module.exports = router;
@@ -238,5 +288,27 @@ module.exports = router;
   (자동 로그인)
   (아이디 저장)
   (좋아하는 미션 목록에서 삭제?)
+
+
+    
+
+
+  art 등록
+  art 좋아하기
+  art 좋아하기 취소
+  art 좋아한거만 모아서 보여주기
+  
+  내가 했던 미션들 다 보여주기
+  미션 좋아하기
+  미션 좋아한거 취소하기
+  
+  내가 했던 art 다 보여주기
+
+
+
+
+
+
+
 
 */

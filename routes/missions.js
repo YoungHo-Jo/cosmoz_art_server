@@ -26,7 +26,7 @@ router.put('/private/like', function(req, res) {
         return;
     }
 
-    db.get().query('update user_done_mission set is_like = 1 where user_pk = ? && mission_pk = ?', [userPK, missionPK], function(err, result) {
+    db.get().query('update user_done_mission set is_like = 1 where user_pk = ? and mission_pk = ?', [userPK, missionPK], function(err, result) {
         if(err) {
             throw err;
         } else {
@@ -51,7 +51,7 @@ router.put('/private/dislike', function(req, res) {
         return;
     }
 
-    db.get().query('update user_done_mission set is_like = 0 where user_pk = ? && mission_pk = ?', [userPK, missionPK], function(err, result) {
+    db.get().query('update user_done_mission set is_like = 0 where user_pk = ? and mission_pk = ?', [userPK, missionPK], function(err, result) {
         if(err) {
             throw err;
         } else {
@@ -71,6 +71,7 @@ router.post('/private/done', function(req, res) {
     var userPK = req.body.user_pk;
     var missionPK = req.body.mission_pk;
     var isLike = req.body.is_like;
+    var time = req.body.time;
     var date = datetime.create().format('Y-m-d H:M:S');
 
     if(!userPK || !missionPK || !isLike) {
@@ -82,7 +83,8 @@ router.post('/private/done', function(req, res) {
         user_pk: userPK,
         mission_pk: missionPK,
         date: date,
-        is_like: isLike
+        is_like: isLike,
+        time: time
     };
 
     db.get().query('insert into user_done_mission set ?', [doneMission], function(err, result){
@@ -93,6 +95,31 @@ router.post('/private/done', function(req, res) {
         }
     });
 });
+
+
+/**
+ * Update a user's accumulation time
+ */
+router.put('/private/user/time', function(req, res) {
+    req.accepts('appliation/json');
+
+    var userPK = req.body.user_pk;
+    var time = req.body.time;
+
+    if(!userPK || !time) {
+        res.status(400).send('You must send the user_pk and time ');
+        return;
+    }
+
+    db.get().query('update users set accumulation_time = accumulation_time + ? where pk = ?', [time ,userPK], function(err, result) {
+        if(err) {
+            throw err;
+        } else {
+            res.status(201).send('Success: put/private/user/time');
+        }
+    });
+});
+
 
 
 /**
