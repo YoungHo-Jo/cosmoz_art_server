@@ -143,6 +143,24 @@ router.get('/private/:userpk', function(req, res) {
 });
 
 
+/**
+ * 
+ * Get a mission from missions table randomly
+ */
+router.get('/mission/random', function (req, res) {
+    
+    db.get().query('select * from missions order by rand() limit 1', function (err, result) {
+        if(err) {
+            throw err;
+        } else {
+            res.status(201).json(result);
+            console.log(result);
+        }
+    });
+
+});
+
+
 
 
 
